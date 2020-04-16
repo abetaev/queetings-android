@@ -65,6 +65,9 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
         // Enable Javascript
         settings.javaScriptEnabled = true
 
+        // Enable auto play videos
+        settings.mediaPlaybackRequiresUserGesture = false
+
         // Use WideViewport and Zoom out if there is no viewport defined
         settings.useWideViewPort = true
         settings.loadWithOverviewMode = true
@@ -76,8 +79,9 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
         settings.domStorageEnabled = false
 
         // Hide the zoom controls for HONEYCOMB+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-        settings.displayZoomControls = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            settings.displayZoomControls = false
+        }
 
         // Enable remote debugging via chrome://inspect
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
