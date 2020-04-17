@@ -11,6 +11,8 @@ import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.util.Log
+import android.view.MotionEvent
 import android.view.WindowManager
 import android.webkit.*
 
@@ -42,10 +44,7 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
         }
     }
 
-    private fun run () {
-        window.setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-        )
+    private fun run() {
         setContentView(R.layout.activity_webview)
         val webView = findViewById<WebView>(R.id.webview)
         val baseUrl = if (intent?.data != null) {
@@ -88,10 +87,23 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
+        // Disable scrolling. At all!!!
+        webView.isHorizontalScrollBarEnabled = false
+        webView.isVerticalScrollBarEnabled = false
+        webView.setOnTouchListener { _, event -> (event.action == MotionEvent.ACTION_MOVE); }
+
+
+
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 startActivity(Intent(Intent.ACTION_VIEW, request?.url))
                 return true
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                webView.evaluateJavascript("window.webview=true;console.log(window)") {
+                    Log.d("MAIN", it)
+                }
             }
         }
 

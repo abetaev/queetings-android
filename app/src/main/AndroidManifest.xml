@@ -10,9 +10,9 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/videobar"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/videobar"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.NoTitleBar">
         <activity android:name=".MainActivity" android:configChanges="keyboardHidden|orientation|screenSize">
