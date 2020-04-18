@@ -6,6 +6,8 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -13,7 +15,6 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.MotionEvent
-import android.view.WindowManager
 import android.webkit.*
 
 
@@ -23,7 +24,12 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val requiredPermissions = arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+        val requiredPermissions = arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                Manifest.permission.BLUETOOTH
+        )
         val allPermissionsGranted = requiredPermissions.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
@@ -32,7 +38,18 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
         } else {
             ActivityCompat.requestPermissions(this, requiredPermissions, PERMISSION_REQUEST)
         }
+    }
 
+    override fun onNewIntent(intent: Intent?) {
+        val webView = findViewById<WebView>(R.id.webview)
+        if (intent?.data != null) {
+            val dataUri: Uri = intent.data!!
+            val joinUrl = if (dataUri.scheme == "https") dataUri.getQueryParameter("join")
+            else dataUri
+            webView.evaluateJavascript("window.network.accept(new URL('${joinUrl}'))") {
+                Log.d("OPEN", it)
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -58,7 +75,7 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
 
     @SuppressLint("SetJavaScriptEnabled")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    fun setupWebView(webView: WebView) {
+    private fun setupWebView(webView: WebView) {
         val settings: WebSettings = webView.settings
 
         // Enable Javascript
@@ -101,9 +118,13 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                webView.evaluateJavascript("window.webview=true;console.log(window)") {
-                    Log.d("MAIN", it)
+                webView.evaluateJavascript("window.webview = true") {
+                    Log.d("SETUP", it)
                 }
+            }
+
+            override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                handler?.proceed()
             }
         }
 
