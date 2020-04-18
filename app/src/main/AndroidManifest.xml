@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="rapid-booking-249908.appspot.com"
+                    android:host="videobar.ew.r.appspot.com"
                     android:scheme="https" />
             </intent-filter>
         </activity>
