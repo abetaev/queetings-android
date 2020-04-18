@@ -27,8 +27,7 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
         val requiredPermissions = arrayOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS,
-                Manifest.permission.BLUETOOTH
+                Manifest.permission.MODIFY_AUDIO_SETTINGS
         )
         val allPermissionsGranted = requiredPermissions.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
