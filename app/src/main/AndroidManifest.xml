@@ -10,9 +10,9 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@mipmap/videobeer"
+        android:icon="@mipmap/videobar"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/videobeer"
+        android:roundIcon="@mipmap/videobar_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.NoTitleBar">
         <activity

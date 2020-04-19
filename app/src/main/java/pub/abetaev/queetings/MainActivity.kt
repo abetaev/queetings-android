@@ -7,7 +7,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -87,11 +86,11 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
         settings.useWideViewPort = true
         settings.loadWithOverviewMode = true
 
-        // Enable pinch to zoom without the zoom buttons
+        // Disable pinch to zoom without the zoom buttons
         settings.builtInZoomControls = false
 
         // Allow use of Local Storage
-        settings.domStorageEnabled = false
+        settings.domStorageEnabled = true
 
         // Hide the zoom controls for HONEYCOMB+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -108,22 +107,18 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
         webView.isVerticalScrollBarEnabled = false
         webView.setOnTouchListener { _, event -> (event.action == MotionEvent.ACTION_MOVE); }
 
-
-
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                startActivity(Intent(Intent.ACTION_VIEW, request?.url))
-                return true
+                if (request != null) {
+                    startActivity(Intent(Intent.ACTION_VIEW, request.url))
+                    return true
+                }
+                return false
             }
-
             override fun onPageFinished(view: WebView?, url: String?) {
                 webView.evaluateJavascript("window.webview = true") {
                     Log.d("SETUP", it)
                 }
-            }
-
-            override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                handler?.proceed()
             }
         }
 
