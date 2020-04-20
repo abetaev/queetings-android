@@ -8,8 +8,8 @@ android {
         applicationId "pub.abetaev.queetings"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 4
-        versionName "${project.version}"
+        versionCode 5
+        versionName "${rootProject.version}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

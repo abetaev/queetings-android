@@ -1,4 +1,4 @@
-package pub.abetaev.queetings
+package pub.betaev.queetings
 
 import android.Manifest
 import android.annotation.SuppressLint
