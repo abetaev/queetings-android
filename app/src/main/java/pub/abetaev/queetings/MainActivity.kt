@@ -26,7 +26,8 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
         val requiredPermissions = arrayOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS
+                Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                Manifest.permission.BLUETOOTH
         )
         val allPermissionsGranted = requiredPermissions.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
@@ -42,10 +43,11 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
         val webView = findViewById<WebView>(R.id.webview)
         if (intent?.data != null) {
             val dataUri: Uri = intent.data!!
-            val joinUrl = if (dataUri.scheme == "https") dataUri.getQueryParameter("join")
+            val joinUrl = if (dataUri.scheme == "https")
+                dataUri.getQueryParameter("join")
             else dataUri
             webView.evaluateJavascript("window.network.accept(new URL('${joinUrl}'))") {
-                Log.d("OPEN", it)
+                Log.d("JS:OPEN", it)
             }
         }
     }
@@ -115,9 +117,10 @@ class MainActivity : Activity(), ActivityCompat.OnRequestPermissionsResultCallba
                 }
                 return false
             }
+
             override fun onPageFinished(view: WebView?, url: String?) {
                 webView.evaluateJavascript("window.webview = true") {
-                    Log.d("SETUP", it)
+                    Log.d("JS:WEBVIEW", it)
                 }
             }
         }
